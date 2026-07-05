@@ -1,0 +1,14 @@
+name: mileage_tracker
+description: A private step and mileage tracker.
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  geolocator: ^10.1.0
+  pedometer: ^4.2.0
+  flutter_tts: ^3.8.3
+  permission_handler: ^11.0.1
