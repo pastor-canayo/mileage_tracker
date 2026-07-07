@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:sensors_plus/sensors_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() => runApp(MaterialApp(home: MovementTracker(), theme: ThemeData.dark()));
 
@@ -20,8 +21,18 @@ class _MovementTrackerState extends State<MovementTracker> {
 
   void _toggleTracking() async {
     if (!_isTracking) {
-      LocationPermission perm = await Geolocator.requestPermission();
-      if (perm == LocationPermission.denied) return;
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.activityRecognition,
+        Permission.location,
+      ].request();
+
+      if (statuses[Permission.activityRecognition]!.isDenied || 
+          statuses[Permission.location]!.isDenied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Permissions are required to track activity!'))
+        );
+        return;
+      }
       
       setState(() { _isTracking = true; _miles = 0.0; _steps = 0; _milestoneSaid = false; });
       
